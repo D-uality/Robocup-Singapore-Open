@@ -1,10 +1,10 @@
-#include "HardwareSerial.h"
 #include "ModeSelector.h"
 #include <Arduino.h>
 
-int CheckLeftSideGreen();
-int CheckRightSideGreen();
-void IntersectionTurning(int Turn);
+void TurnRight();
+void TurnLeft();
+void TurnAround();
+void CarryOn();
 
 int Integral, LastError, LeftMotor, RightMotor;
 
@@ -13,23 +13,20 @@ void Running() {
 
   ReadColourSensors();
   CalibrateColourSensorValues(LowerBound, UpperBound);
-  
-  if(ColourSensorValues[0] < 5 && ColourSensorValues[3] < 5)    Intersection(0);
-  else if(ColourSensorValues[0] < 5)                              Intersection(1);
-  else if(ColourSensorValues[3] < 5)                              Intersection(2);
-  else                                                            PID(500, 10, 0, 0);
-}
 
+  if(ColourSensorValues[0] < 20 && ColourSensorValues[3] < 20)                                            Intersection(2);
+  else if(ColourSensorValues[0] < 40 && ColourSensorValues[1] < 50 && ColourSensorValues[3] < 15)         Intersection(0);
+  else if(ColourSensorValues[0] < 15 && ColourSensorValues[3] < 40 && ColourSensorValues[4] < 50)         Intersection(1);
+  else                                                                                                    PID(Speed, Kp, Ki, Kd);
+}   
+ 
 void SpeedGuard() {
   if (LeftMotor  > MAX-MID) LeftMotor  = MAX-MID;	
  	if (RightMotor > MAX-MID) RightMotor = MAX-MID;
  	if (LeftMotor  < MIN-MID) LeftMotor  = MIN-MID;
   if (RightMotor < MIN-MID) RightMotor = MIN-MID;
 
-	if(LeftMotor > 0) 	 LeftMotor = map(LeftMotor,     0, 800,   60, 800);
-	else			           LeftMotor = map(LeftMotor,  -800,   0, -800, -60);
-	if(RightMotor > 0) 	RightMotor = map(RightMotor,    0, 800,   60, 800);
-	else			          RightMotor = map(RightMotor, -800,   0, -800, -60);
+	
 }
 
 void PID(int v, float Kp, float Ki, float Kd) {
@@ -55,87 +52,88 @@ void PID(int v, float Kp, float Ki, float Kd) {
 }
 
 void Intersection(int side) {
-  int Turn = -1;
-  Run(0, 0, 200);
+  Run(0, 0, 50);
+  ReadColourSensors();
+  CalibrateColourSensorValues(LowerBound, UpperBound);
 
-  int LeftSide = CheckLeftSideGreen();
-  int RightSide = CheckRightSideGreen();
+  char Buffer[40];
+  sprintf(Buffer, "\nChecking For Green for type %d", side);
+  Serial.print(Buffer);
 
   if(side == 0) {
-    // Cross Intersection
-
-    char Buffer[40];
-    sprintf(Buffer, "Checking both sides: %d and %d", LeftSide, RightSide);
-    Serial.println();
-    Serial.println(Buffer);
-
-    if(LeftSide == 1)                     Turn = 1;
-    if(RightSide == 1)                    Turn = 2;
-    if(LeftSide == 1 && RightSide == 1)   Turn = 3;
-    if(LeftSide == 0 && RightSide == 0)   Turn = 0;
-  } else if (side == 1) {
-    // T Intersection left
-
-    char Buffer[40];
-    sprintf(Buffer, "Checking left sides: %d", LeftSide);
-    Serial.println();
-    Serial.println(Buffer);
-
-    if(LeftSide == 1)         Turn = 1;
-    else                      Run(-300, 300, 300);
-
-  } else if (side == 2) {
-    // T Intersection right
-
-    char Buffer[40];
-    sprintf(Buffer, "Checking right sides: %d", RightSide);
-    Serial.println();
-    Serial.println(Buffer);
-
-    if(RightSide == 1)        Turn = 2;
-    else                      Run(300, -300, 300);
-
+    if(ColourSensorValues[4] < 90) {
+      sprintf(Buffer, "\n\tGreen Identified");
+      Serial.print(Buffer);
+      TurnRight();
+    } else {
+      PID(Speed, Kp, Ki, Kd);
+    }
   }
+  if(side == 1) {
+    if(ColourSensorValues[1] < 90) {
+      sprintf(Buffer, "\n\tGreen Identified");
+      Serial.print(Buffer);
+      TurnLeft();
+    } else {
+      PID(Speed, Kp, Ki, Kd);
+    }
+  }
+  if(side == 2) {
+    int LeftSide = 0, RightSide = 0, Turn = 0;
 
-  if(Turn == 1) {
-    Run(0, 0, 100);
-    Run(300, 300, 600);
-    Run(0, 0, 100);
+    if(ColourSensorValues[1] < 85 && ColourSensorValues[2] < 90) {
+      LeftSide = 1;
+      Turn = 1;
+    }
+    if(ColourSensorValues[4] < 85 && ColourSensorValues[5] < 90) {
+      RightSide = 1;
+      Turn = 2;
+    }
+    if(LeftSide == 1 && RightSide == 1) {
+      Turn = 3;
+    }
 
-    Run(-300, 300, 2300);
-    Run(0, 0, 100);
+    if(Turn == 0)       CarryOn();
+    else if(Turn == 1)  TurnLeft();
+    else if(Turn == 2)  TurnRight();
+    else if(Turn == 3)  TurnAround();
 
-    Run(300, 300, 600);
-  } else if(Turn == 2) {
-    Run(0, 0, 100);
-    Run(300, 300, 600);
-    Run(0, 0, 100);
-
-    Run(300, -300, 2300);
-    Run(0, 0, 100);
-
-    Run(300, 300, 600);
+    sprintf(Buffer, "\n\tLeftSide: %d RightSide: %d", LeftSide, RightSide);
+    Serial.print(Buffer);
   }
 }
 
-int CheckLeftSideGreen() {
-  int LeftSide = 0;
-  if(ColourSensorValues[1] <= 90 && ColourSensorValues[2] <= 90) {
-    LeftSide = 1;
+void TurnRight() {
+  Run(250, 250, 350);
+  Run(0, 0, 0);
+  Run(250, -250, 1800);
+
+  while(ColourSensorValues[0] > 70) {
+    ReadColourSensors();
+    CalibrateColourSensorValues(LowerBound, UpperBound);
   }
-  return LeftSide;
 }
 
-int CheckRightSideGreen() {
-  int RightSide = 0;
-  if(ColourSensorValues[4] <= 90 && ColourSensorValues[5] <= 90) {
-    RightSide = 1;
+void TurnLeft() {
+  Run(250, 250, 350);
+  Run(0, 0, 0);
+  Run(-250, 250, 2200);
+
+  while(ColourSensorValues[4] > 70) {
+    ReadColourSensors();
+    CalibrateColourSensorValues(LowerBound, UpperBound);
   }
-  return RightSide;
 }
 
-void IntersectionTurning(int Turn) {
-  if(Turn == 1) {
-    Run(-200, 500, 2000);
+void TurnAround() {
+  Run(-250, 250, 4800);
+
+  while(ColourSensorValues[0] > 70) {
+    ReadColourSensors();
+    CalibrateColourSensorValues(LowerBound, UpperBound);
   }
+}
+
+void CarryOn() {
+  Run(250, 250, 400);
 }

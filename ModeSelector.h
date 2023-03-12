@@ -20,6 +20,11 @@ extern const int RunOutput;
 extern int ReadColourSensorsOutput;
 extern const int PIDOutput;
 
+extern const int Speed;
+extern const int Kp ;
+extern const int Ki;
+extern const int Kd;
+
 void Mode();
   void Run(int v1, int v2, int d=1);
   void ReadColourSensors();

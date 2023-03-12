@@ -25,6 +25,13 @@ void Mode() {
 }
 
 void Run(int v1, int v2, int d) {
+  if(v1 == 0)     v1 = 0;
+  else if(v1 > 0) v1 = map(v1,     0, 800,   60, 800);
+	else     			  v1 = map(v1,  -800,   0, -800, -60);
+	if(v2 == 0)     v2 = 0;
+  else if(v2 > 0) v2 = map(v2,    0,  800,   60, 800);
+	else			      v2 = map(v2, -800,    0, -800, -60);
+
   motor.setPin(DriveMotors[0], MID+v1);
   motor.setPin(DriveMotors[1], MID-v2-StraightWeight);
   motor.setPin(DriveMotors[2], MID+v1);

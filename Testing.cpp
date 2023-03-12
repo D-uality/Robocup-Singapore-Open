@@ -6,16 +6,20 @@
 void Testing() {
   Serial.print("Testing\t");
 
+  Run(250, 250, 350);
+  Run(0, 0, 0);
+  Run(250, -250, 1800);
 
-  Run(0, 0, 100);
-  Run(300, 300, 600);
-  Run(0, 0, 100);
+  ReadColourSensors();
+  CalibrateColourSensorValues(LowerBound, UpperBound);
 
-  Run(-300, 300, 2300);
-  Run(0, 0, 100);
+  while(ColourSensorValues[0] > 70) {
+    ReadColourSensors();
+    CalibrateColourSensorValues(LowerBound, UpperBound);
+  }
 
-  Run(300, 300, 600);
-  Run(0, 0, 5000);
+  Run(0, 0);
+  while(Serial.available() == 0) {}
 }
 
 // void MotorTesting() {

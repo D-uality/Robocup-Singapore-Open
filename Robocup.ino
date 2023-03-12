@@ -22,6 +22,11 @@ int mode = 0;
 int ColourSensorValues[6];
 int CalibrationNumbers[6][2];
 
+const int Speed = 300;
+const int Kp = 10;
+const int Ki = 0;
+const int Kd = 3;
+
 const int RunOutput = 1;
 int ReadColourSensorsOutput = 2;
 const int PIDOutput = 1;
