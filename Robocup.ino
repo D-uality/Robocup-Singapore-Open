@@ -1,55 +1,45 @@
-// ------------------------------------------------------------------------------------------------------------ INCLUDES
-
 #include <Arduino.h>
+#include "Robot.h"
 #include "ModeSelector.h"
 
+const int ColourSensorPins[6] = {A0, A1, A2, A3, A4, A5};
+const int ServoPins[4] = {13, 12, 11, 10};
 
-// ------------------------------------------------------------------------------------------------------------ VARIABLES
+cRobot Robot(ColourSensorPins);
+Servo TopLeft;
+Servo BottomLeft;
+Servo TopRight;
+Servo BottomRight;
 
-const int DriveMotors[4] = {0, 1, 2, 3};
-const int ColourSensors[6] = {A0, A1, A2, A3, A4, A5};
+int Mode = 0;
 
-const int MotorFrequency = 220;
-const int MID = 1278;
-const int MIN = MID-800;
-const int MAX = MID+800;
-const int StraightWeight = 32;
-const int ProgramDelay = 2;
-const int LowerBound = 0;
-const int UpperBound = 100;
-
-int mode = 0;
-int ColourSensorValues[6];
-int CalibrationNumbers[6][2];
-
-const int Speed = 300;
-const int Kp = 10;
-const int Ki = 0;
-const int Kd = 3;
-
-const int RunOutput = 1;
-int ReadColourSensorsOutput = 2;
-const int PIDOutput = 1;
-
-// ------------------------------------------------------------------------------------------------------------ LOOP
+void setup() {
+  Serial.begin(115200);
+  
+  TopLeft.attach(13);
+  BottomLeft.attach(12);
+  TopRight.attach(11);
+  BottomRight.attach(10);
+}
 
 void loop() {
-  Mode();
+  while(Serial.available() > 0) {
+    String IncomingString = Serial.readString();
 
-  if(mode == 0) {
-    Serial.print("Stopped\t");
-    InitaliseCalibrationNumbers();
-    Run(0, 0);
-  } else if(mode == 1) {
-    Running();
-  } else if(mode == 2) {
-    Testing();  
-  } else if(mode == 3) {
-    Calibrating();
-  } else if(mode == 4) {
-    Reading();
+    if(IncomingString == "s") Mode = 0;
+    if(IncomingString == "g") Mode = 1;
+    if(IncomingString == "c") Mode = 2;
   }
- 
+
+  if(Mode == 0) {
+    Serial.print("Stopped\t\t");
+    Robot.InitializeCalibrationNumbers();
+    Run(0, 0);
+  } else if(Mode == 1) {
+    Running();
+  } else if(Mode == 2) {
+    Mode = Robot.Calibrate();
+  }
+
   Serial.println();
-  delay(ProgramDelay);
 }
