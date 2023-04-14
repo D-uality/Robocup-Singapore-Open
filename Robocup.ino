@@ -12,6 +12,7 @@ Servo TopRight;
 Servo BottomRight;
 
 int Mode = 0;
+int ProgramTick = 0;
 
 void setup() {
   Serial.begin(115200);
@@ -23,23 +24,33 @@ void setup() {
 }
 
 void loop() {
+  Serial.print(ProgramTick);
+
   while(Serial.available() > 0) {
     String IncomingString = Serial.readString();
 
     if(IncomingString == "s") Mode = 0;
     if(IncomingString == "g") Mode = 1;
     if(IncomingString == "c") Mode = 2;
+    if(IncomingString == "r") Mode = 3;
+    if(IncomingString == "t") Mode = 4;
   }
 
   if(Mode == 0) {
-    Serial.print("Stopped\t\t");
+    Serial.print("    Stopped    |    ");
     Robot.InitializeCalibrationNumbers();
     Run(0, 0);
   } else if(Mode == 1) {
     Running();
   } else if(Mode == 2) {
     Mode = Robot.Calibrate();
+  } else if(Mode == 3) {
+    Reading();
+  } else if(Mode == 4) {
+    Testing();
   }
 
   Serial.println();
+  delay(2);
+  ProgramTick += 1;
 }

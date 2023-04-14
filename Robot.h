@@ -17,6 +17,7 @@ class cRobot {
     int Calibrate();
 };
 
-void Run(int v1, int v2);
+void Run(int v1, int v2, int d=2);
+void RunUntil(int v1, int v2, int ColourSensorPin, int ColourValue);
 
 #endif

@@ -5,6 +5,7 @@ extern Servo TopLeft;
 extern Servo BottomLeft;
 extern Servo TopRight;
 extern Servo BottomRight;
+extern cRobot Robot;
 
 cRobot::cRobot(int pColourSensorPins[]) {
   for(int i=0; i<6; i++) {
@@ -21,6 +22,9 @@ void cRobot::ReadColourSensors(int pColourSensorValues[], int pCalibratedState) 
     if(pCalibratedState == 1) {
       pColourSensorValues[i] = map(pColourSensorValues[i], CalibrationNumbers[i][0], CalibrationNumbers[i][1], 0, 100);
     }
+    else if(pCalibratedState == 2) {
+      pColourSensorValues[i] = map(pColourSensorValues[i], CalibrationNumbers[i][0], CalibrationNumbers[i][1], 0, 1023);
+    }
   }
 
   char Buffer[50];
@@ -36,7 +40,7 @@ void cRobot::InitializeCalibrationNumbers() {
   }
 
   char Buffer[100];
-  sprintf(Buffer, "%d %d %d %d %d %d\t\t%d %d %d %d %d %d", CalibrationNumbers[0][0], CalibrationNumbers[1][0], CalibrationNumbers[2][0], CalibrationNumbers[3][0], CalibrationNumbers[4][0], CalibrationNumbers[5][0], CalibrationNumbers[0][1], CalibrationNumbers[1][1], CalibrationNumbers[2][1], CalibrationNumbers[3][1], CalibrationNumbers[4][1], CalibrationNumbers[5][1]);
+  sprintf(Buffer, "%d %d %d %d %d %d        %d %d %d %d %d %d", CalibrationNumbers[0][0], CalibrationNumbers[1][0], CalibrationNumbers[2][0], CalibrationNumbers[3][0], CalibrationNumbers[4][0], CalibrationNumbers[5][0], CalibrationNumbers[0][1], CalibrationNumbers[1][1], CalibrationNumbers[2][1], CalibrationNumbers[3][1], CalibrationNumbers[4][1], CalibrationNumbers[5][1]);
 
   Serial.print(Buffer);
 }
@@ -67,7 +71,7 @@ int cRobot::Calibrate() {
     }
 
     if(CalibrationMode == 1) {
-      Serial.print("Calibrating\t");
+      Serial.print("    Calibrating    |    ");
 
       for(int i=0; i<6; i++) {
         ColourSensorValues[i] = analogRead(ColourSensorPins[i]);
@@ -76,7 +80,7 @@ int cRobot::Calibrate() {
         if(ColourSensorValues[i] > ColourSensorValuesExtremites[i][1]) ColourSensorValuesExtremites[i][1] = ColourSensorValues[i];
       }
 
-      sprintf(Buffer, "%d %d %d %d %d\t%d %d %d %d %d", ColourSensorValuesExtremites[0][0], ColourSensorValuesExtremites[1][0], ColourSensorValuesExtremites[2][0], ColourSensorValuesExtremites[3][0], ColourSensorValuesExtremites[4][0], ColourSensorValuesExtremites[0][1], ColourSensorValuesExtremites[1][1], ColourSensorValuesExtremites[2][1], ColourSensorValuesExtremites[3][1], ColourSensorValuesExtremites[4][1]);
+      sprintf(Buffer, "%d %d %d %d %d %d        %d %d %d %d %d %d", ColourSensorValuesExtremites[0][0], ColourSensorValuesExtremites[1][0], ColourSensorValuesExtremites[2][0], ColourSensorValuesExtremites[3][0], ColourSensorValuesExtremites[4][0], ColourSensorValuesExtremites[5][0], ColourSensorValuesExtremites[0][1], ColourSensorValuesExtremites[1][1], ColourSensorValuesExtremites[2][1], ColourSensorValuesExtremites[3][1], ColourSensorValuesExtremites[4][1], ColourSensorValuesExtremites[5][1]);
       Serial.println(Buffer);
     }
 
@@ -122,12 +126,22 @@ int cRobot::Calibrate() {
   return 0;
 }
 
-void Run(int v1, int v2) {
-  v1 = map(constrain(v1, -100, 100), -100, 100, -90, 90);
-  v2 = map(constrain(v2, -100, 100), -100, 100, -90, 90);
+void Run(int v1, int v2, int d=2) {
+  v1 = map(constrain(v1, -100, 100), -100, 100, -60, 60);
+  v2 = map(constrain(v2, -100, 100), -100, 100, -60, 60);
 
   TopLeft.write(90+v1);
   BottomLeft.write(90+v1);
   TopRight.write(90-v2);
   BottomRight.write(90-v2);
+
+  delay(d);
+}
+
+void RunUntil(int v1, int v2, int ColourSensorPin, int ColourValue) {
+  int ColourSensorValues[6];
+  do {
+    Robot.ReadColourSensors(ColourSensorValues, 1);
+    Run(v1, v2);
+  } while(ColourSensorValues[ColourSensorPin] > ColourValue);
 }
