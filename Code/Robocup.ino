@@ -42,6 +42,7 @@ void loop() {
     Run(0, 0);
   } else if(Mode == 1) {
     Running();
+    ProgramTick += 1;
   } else if(Mode == 2) {
     Mode = Robot.Calibrate();
   } else if(Mode == 3) {
@@ -52,5 +53,4 @@ void loop() {
 
   Serial.println();
   delay(2);
-  ProgramTick += 1;
 }
