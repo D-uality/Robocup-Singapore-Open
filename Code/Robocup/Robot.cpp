@@ -145,3 +145,7 @@ void RunUntil(int v1, int v2, int ColourSensorPin, int ColourValue) {
     Run(v1, v2);
   } while(ColourSensorValues[ColourSensorPin] > ColourValue);
 }
+
+void Parallel(int v1, int v2) {
+  x`
+}
