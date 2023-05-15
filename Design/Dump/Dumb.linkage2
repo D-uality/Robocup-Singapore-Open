@@ -1,0 +1,39 @@
+<linkage2>
+	<program zoom="2.856100" xoffset="182" yoffset="-241" scalefactor="1.000000" units="Millimeters" backgroundtransparency="0.000000" backgroundscale="1.000000" xgrid="" ygrid=""/>
+	<connector id="4" selected="false" layer="16" x="75.590551" y="37.795276" anchor="true" input="true" rpm="-15.000000" color="6854344" usercolor="false"/>
+	<connector id="7" selected="false" layer="16" x="126.109093" y="140.910455" slider="true" color="11272364" usercolor="false">
+		<slidelimit id="0"/>
+		<slidelimit id="3"/>
+	</connector>
+	<connector id="0" selected="false" layer="16" x="-3.641329" y="-56.692913" anchor="true" color="16711680" usercolor="false"/>
+	<connector id="1" selected="false" layer="16" x="-113.385827" y="264.566929" color="12632064" usercolor="false"/>
+	<connector id="3" selected="false" layer="16" x="170.078740" y="207.874016" color="16711808" usercolor="false"/>
+	<connector id="5" selected="false" layer="16" x="37.795276" y="151.181102" color="11012476" usercolor="false"/>
+	<Link id="1" selected="false" layer="16" linesize="1" solid="true" shapetype="hull" color="12632064" usercolor="false">
+		<connector id="4"/>
+		<connector id="7"/>
+	</Link>
+	<Link id="2" selected="false" layer="16" linesize="1" solid="true" shapetype="hull" color="32768" usercolor="false">
+		<connector id="0"/>
+		<connector id="3"/>
+	</Link>
+	<Link id="3" selected="false" layer="16" linesize="1" solid="true" shapetype="hull" color="16711808" usercolor="false">
+		<connector id="3"/>
+		<connector id="1"/>
+	</Link>
+	<Link id="0" selected="false" layer="16" linesize="1" solid="true" shapetype="hull" color="16711680" usercolor="false">
+		<connector id="5"/>
+		<connector id="0"/>
+	</Link>
+	<Link id="4" selected="false" layer="16" linesize="1" solid="true" shapetype="hull" color="6854344" usercolor="false">
+		<connector id="1"/>
+		<connector id="5"/>
+	</Link>
+	<Link id="5" selected="false" layer="16" linesize="1" shapetype="hull" color="11012476" usercolor="false">
+		<connector id="0"/>
+		<connector id="1"/>
+	</Link>
+	<selected>
+	</selected>
+	<background></background>
+</linkage2>
