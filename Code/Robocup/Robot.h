@@ -9,10 +9,11 @@ class cRobot {
   private:
     int ColourSensorPins[6];
     int CalibrationNumbers[6][2];
-
+    int JoyStickPins[2];
   public:
-    cRobot(int pColourSensorPins[]);
+    cRobot(int pColourSensorPins[], int pJoyStickPins[]);
     void ReadColourSensors(int pColourSensorValues[], int pCalibratedState);
+    void ReadJoyStick(int pJoyStickValues[]);
     void InitializeCalibrationNumbers();
     int Calibrate();
 };

@@ -7,10 +7,15 @@ extern Servo TopRight;
 extern Servo BottomRight;
 extern cRobot Robot;
 
-cRobot::cRobot(int pColourSensorPins[]) {
+cRobot::cRobot(int pColourSensorPins[], int pJoyStickPins[]) {
   for(int i=0; i<6; i++) {
     ColourSensorPins[i] = pColourSensorPins[i];
     pinMode(ColourSensorPins[i], INPUT);
+  }
+
+  for(int i=0; i<2; i++) {
+    JoyStickPins[i] = pJoyStickPins[i];
+    pinMode(JoyStickPins[i], INPUT);
   }
 }
 
@@ -29,6 +34,23 @@ void cRobot::ReadColourSensors(int pColourSensorValues[], int pCalibratedState) 
 
   char Buffer[50];
   sprintf(Buffer, "%d %d %d %d %d %d", pColourSensorValues[0], pColourSensorValues[1], pColourSensorValues[2], pColourSensorValues[3], pColourSensorValues[4], pColourSensorValues[5]);
+  Serial.print(Buffer);
+}
+
+void cRobot::ReadJoyStick(int pJoyStickValues[]) {
+  pJoyStickValues[0] = analogRead(JoyStickPins[0]);
+  pJoyStickValues[1] = analogRead(JoyStickPins[1]);
+
+  if(pJoyStickValues[0] > 620)        pJoyStickValues[0] = 1;
+  else if(pJoyStickValues[0] < 420)   pJoyStickValues[0] = -1;
+  else                                pJoyStickValues[0] = 0;
+
+  if(pJoyStickValues[1] > 620)        pJoyStickValues[1] = 1;
+  else if(pJoyStickValues[1] < 420)   pJoyStickValues[1] = -1;
+  else                                pJoyStickValues[1] = 0;
+
+  char Buffer[40];
+  sprintf(Buffer, "%d %d", pJoyStickValues[0], pJoyStickValues[1]);
   Serial.print(Buffer);
 }
 

@@ -4,8 +4,9 @@
 
 const int ColourSensorPins[6] = {A0, A1, A2, A3, A4, A5};
 const int ServoPins[4] = {13, 12, 11, 10};
+const int JoyStickPins[2] = {A8, A9};
 
-cRobot Robot(ColourSensorPins);
+cRobot Robot(ColourSensorPins, JoyStickPins);
 Servo TopLeft;
 Servo BottomLeft;
 Servo TopRight;
