@@ -9,14 +9,7 @@ void AvoidObstacle();
 void Testing() {
   Serial.print("    Testing    |    ");
 
-  int JoyStickValues[2];
-  Robot.ReadJoyStick(JoyStickValues);
-
-  if(JoyStickValues[1] == 1) {
-    AvoidObstacle();
-  } else {
-    Run(30, 30);
-  }
+  Run(30, 30);
 }
 
 void AvoidObstacle() {

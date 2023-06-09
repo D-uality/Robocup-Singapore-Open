@@ -1,0 +1,40 @@
+<linkage2>
+	<program zoom="1.690000" xoffset="-286" yoffset="-219" scalefactor="1.000000" units="Millimeters" backgroundtransparency="0.000000" backgroundscale="1.000000" xgrid="" ygrid=""/>
+	<connector id="0" selected="false" layer="16" x="-170.078740" y="-37.795276" anchor="true" input="true" rpm="10.000000" alwaysmanual="true" color="16711680" usercolor="false"/>
+	<connector id="1" selected="false" layer="16" x="-251.743432" y="-37.795276" anchor="true" color="12632064" usercolor="false"/>
+	<connector id="3" selected="false" layer="16" x="-377.952756" y="151.181102" color="6579300" usercolor="false"/>
+	<connector id="5" selected="false" layer="16" x="-680.314961" y="226.771654" color="11012476" usercolor="false"/>
+	<connector id="6" selected="false" layer="16" x="-175.881102" y="226.771654" color="6579300" usercolor="false"/>
+	<connector id="8" selected="false" layer="16" x="-170.078740" y="264.566929" color="6579300" usercolor="false"/>
+	<Link id="2" selected="false" layer="16" linesize="1" solid="true" shapetype="hull" color="32768" usercolor="false">
+		<connector id="0"/>
+		<connector id="6"/>
+	</Link>
+	<Link id="0" selected="false" layer="16" linesize="1" solid="true" shapetype="hull" color="16711680" usercolor="false">
+		<connector id="1"/>
+		<connector id="3"/>
+	</Link>
+	<Link id="3" selected="false" layer="16" linesize="1" solid="true" shapetype="hull" color="16711808" usercolor="false">
+		<connector id="8"/>
+		<connector id="6"/>
+	</Link>
+	<Link id="4" selected="false" layer="16" linesize="1" solid="true" shapetype="hull" color="6854344" usercolor="false">
+		<connector id="5"/>
+		<connector id="6"/>
+	</Link>
+	<Link id="7" selected="false" layer="16" linesize="1" solid="true" shapetype="hull" color="11272364" usercolor="false">
+		<connector id="3"/>
+		<connector id="6"/>
+	</Link>
+	<Link id="1" selected="false" layer="16" linesize="1" shapetype="hull" color="12632064" usercolor="false">
+		<connector id="3"/>
+		<connector id="5"/>
+	</Link>
+	<Link id="5" selected="false" layer="16" linesize="1" shapetype="hull" color="11012476" usercolor="false">
+		<connector id="3"/>
+		<connector id="8"/>
+	</Link>
+	<selected>
+	</selected>
+	<background></background>
+</linkage2>
