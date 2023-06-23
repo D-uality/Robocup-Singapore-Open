@@ -3,7 +3,7 @@
 #include "ModeSelector.h"
 
 const int ColourSensorPins[6] = {A0, A1, A2, A3, A4, A5};
-const int ServoPins[4] = {30, 28, 26, 24};
+const int ServoPins[4] = {31, 29, 27, 25};
 const int JoyStickPins[2] = {A6, A7};
 
 cRobot Robot(ColourSensorPins, JoyStickPins);

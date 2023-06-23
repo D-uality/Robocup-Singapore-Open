@@ -10,6 +10,7 @@ class cRobot {
     int ColourSensorPins[6];
     int CalibrationNumbers[6][2];
     int JoyStickPins[2];
+    int JoyStickCalibrationNumbers[2];
   public:
     cRobot(int pColourSensorPins[], int pJoyStickPins[]);
     void ReadColourSensors(int pColourSensorValues[], int pCalibratedState);

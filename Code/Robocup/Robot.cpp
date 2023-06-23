@@ -6,7 +6,7 @@ extern Servo BottomLeft;
 extern Servo TopRight;
 extern Servo BottomRight;
 extern cRobot Robot;
-
+ 
 cRobot::cRobot(int pColourSensorPins[], int pJoyStickPins[]) {
   for(int i=0; i<6; i++) {
     ColourSensorPins[i] = pColourSensorPins[i];
@@ -41,15 +41,18 @@ void cRobot::ReadJoyStick(int pJoyStickValues[]) {
   pJoyStickValues[0] = analogRead(JoyStickPins[0]);
   pJoyStickValues[1] = analogRead(JoyStickPins[1]);
 
-  if(pJoyStickValues[0] > 620)        pJoyStickValues[0] = 1;
-  else if(pJoyStickValues[0] < 420)   pJoyStickValues[0] = -1;
-  else                                pJoyStickValues[0] = 0;
-
-  if(pJoyStickValues[1] > 620)        pJoyStickValues[1] = 1;
-  else if(pJoyStickValues[1] < 420)   pJoyStickValues[1] = -1;
-  else                                pJoyStickValues[1] = 0;
-
   char Buffer[40];
+  sprintf(Buffer, "%d %d        ", pJoyStickValues[0], pJoyStickValues[1]);
+  Serial.print(Buffer);
+
+  if     (pJoyStickValues[0] > (JoyStickCalibrationNumbers[0] + 100)) pJoyStickValues[0] = 1;
+  else if(pJoyStickValues[0] < (JoyStickCalibrationNumbers[0] - 100)) pJoyStickValues[0] = -1;
+  else                                                               pJoyStickValues[0] = 0;
+
+  if     (pJoyStickValues[1] > (JoyStickCalibrationNumbers[1] + 100)) pJoyStickValues[1] = 1;
+  else if(pJoyStickValues[1] < (JoyStickCalibrationNumbers[1] - 100)) pJoyStickValues[1] = -1;
+  else                                                               pJoyStickValues[1] = 0;
+
   sprintf(Buffer, "%d %d", pJoyStickValues[0], pJoyStickValues[1]);
   Serial.print(Buffer);
 }
@@ -61,8 +64,12 @@ void cRobot::InitializeCalibrationNumbers() {
     }
   }
 
+  for(int i=0; i<2; i++) {
+    JoyStickCalibrationNumbers[i] = analogRead(JoyStickPins[i]);
+  }
+
   char Buffer[100];
-  sprintf(Buffer, "%d %d %d %d %d %d        %d %d %d %d %d %d", CalibrationNumbers[0][0], CalibrationNumbers[1][0], CalibrationNumbers[2][0], CalibrationNumbers[3][0], CalibrationNumbers[4][0], CalibrationNumbers[5][0], CalibrationNumbers[0][1], CalibrationNumbers[1][1], CalibrationNumbers[2][1], CalibrationNumbers[3][1], CalibrationNumbers[4][1], CalibrationNumbers[5][1]);
+  sprintf(Buffer, "%d %d %d %d %d %d        %d %d %d %d %d %d        %d %d", CalibrationNumbers[0][0], CalibrationNumbers[1][0], CalibrationNumbers[2][0], CalibrationNumbers[3][0], CalibrationNumbers[4][0], CalibrationNumbers[5][0], CalibrationNumbers[0][1], CalibrationNumbers[1][1], CalibrationNumbers[2][1], CalibrationNumbers[3][1], CalibrationNumbers[4][1], CalibrationNumbers[5][1], JoyStickCalibrationNumbers[0], JoyStickCalibrationNumbers[1]);
 
   Serial.print(Buffer);
 }
