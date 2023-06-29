@@ -8,50 +8,30 @@ extern int ProgramTick;
 void AvoidObstacle();
 
 void Testing() {
-  // Serial.print("    Testing    |    ");
+  Serial.print("Testing    |    ");
 
-  // int JoyStickValues[2];
-  // Robot.ReadJoyStick(JoyStickValues);
+  int JoyStickValues[2];
+  Robot.ReadJoyStick(JoyStickValues);
 
-  // if(JoyStickValues[0] == 1 && ProgramTick > 200) {
-  //   AvoidObstacle();
-  // } else {
-  //   ProgramTick += 1;
-  //   Run(-30, -30);
-  // }
+  if(JoyStickValues[0] != 0 || JoyStickValues[1] != 0)  AvoidObstacle();
+  else                                                  Run(30, 30);
 
-  for(int i=0; i<30; i+=2) {
-    for(int j=0; j<100; j++) {
-      char Buffer[40];
-      sprintf(Buffer, "      %d %d", (-30-i), (-30+i));
-      Serial.println(Buffer);
-
-      Run(-30-i, -30+i);
-      delay(1);
-
-      int JoyStickValues[2];
-      Robot.ReadJoyStick(JoyStickValues);
-
-      if(JoyStickValues[0] == 1 || JoyStickValues[1] == -1) break;
-    }
-  }
 }
 
 void AvoidObstacle() {
-  Run(30, 30, 800);
-  Run(30, -30, 1000);
-  Run(0, 0, 1000);
+  Run(-30, -30, 500);
+  Run(-30, 30, 1200);
 
-  for(int i=0; i<30; i++) {
-    Run(-30-i, -30+i);
-    
-    int JoyStickValues[2];
+  int Offset = 10;
+  int JoyStickValues[2];
+  Robot.ReadJoyStick(JoyStickValues);
+
+  while(JoyStickValues[0] == 0 && JoyStickValues[1] == 0) {
     Robot.ReadJoyStick(JoyStickValues);
+    Run(30, 30 - Offset);
+    delay(200);
 
-    char Buffer[40];
-    sprintf(Buffer, "        %d %d", -30-1, -30+i);
-    Serial.print(Buffer);
-
-    if(JoyStickValues[0] == 1 && JoyStickValues[1] == -1) break;
+    Offset += 2;
+    if(Offset > 40) Offset = 40;
   }
 }

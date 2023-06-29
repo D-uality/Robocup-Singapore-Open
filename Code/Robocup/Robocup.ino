@@ -1,4 +1,4 @@
- #include <Arduino.h>
+#include <Arduino.h>
 #include "Robot.h"
 #include "ModeSelector.h"
 
@@ -25,7 +25,9 @@ void setup() {
 }
 
 void loop() {
-  Serial.print(ProgramTick);
+  char Buffer[40];
+  sprintf(Buffer, "%d    |    ", ProgramTick);
+  Serial.print(Buffer);
 
   while(Serial.available() > 0) {
     String IncomingString = Serial.readString();
@@ -38,7 +40,7 @@ void loop() {
   }
 
   if(Mode == 0) {
-    Serial.print("    Stopped    |    ");
+    Serial.print("Stopped    |    ");
     Robot.InitializeCalibrationNumbers();
     Run(0, 0);
   } else if(Mode == 1) {
@@ -50,6 +52,7 @@ void loop() {
     Reading();
   } else if(Mode == 4) {
     Testing();
+    ProgramTick += 1;
   }
 
   Serial.println();

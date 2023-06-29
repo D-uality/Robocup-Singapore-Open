@@ -17,7 +17,7 @@ int LastError = 0;
 int Errors[50];
 
 void Running() {
-  Serial.print("    Running    |    ");
+  Serial.print("Running    |    ");
 
   int ColourSensorValues[6];
   Robot.ReadColourSensors(ColourSensorValues, 1);
@@ -43,7 +43,7 @@ void PID(int ColourSensorValues[], int v, float Kp, float Ki, float Kd) {
   Errors[ProgramTick % 50] = Error;
 
   char Buffer[100];
-  sprintf(Buffer, "        Error %d    Integral %d    Derivative %d    LeftSide %d    RightSide %d", Error, Integral, Derivative, LeftSide, RightSide);
+  sprintf(Buffer, "Error %d    Integral %d    Derivative %d    LeftSide %d    RightSide %d    ", Error, Integral, Derivative, LeftSide, RightSide);
   Serial.print(Buffer);
 }
 

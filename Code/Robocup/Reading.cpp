@@ -5,7 +5,7 @@
 extern cRobot Robot;
 
 void Reading() {
-  Serial.print("    Reading    |    ");
+  Serial.print("Reading    |    ");
   
   Run(0, 0);
 

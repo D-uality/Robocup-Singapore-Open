@@ -33,7 +33,7 @@ void cRobot::ReadColourSensors(int pColourSensorValues[], int pCalibratedState) 
   }
 
   char Buffer[50];
-  sprintf(Buffer, "%d %d %d %d %d %d", pColourSensorValues[0], pColourSensorValues[1], pColourSensorValues[2], pColourSensorValues[3], pColourSensorValues[4], pColourSensorValues[5]);
+  sprintf(Buffer, "%d %d %d %d %d %d    ", pColourSensorValues[0], pColourSensorValues[1], pColourSensorValues[2], pColourSensorValues[3], pColourSensorValues[4], pColourSensorValues[5]);
   Serial.print(Buffer);
 }
 
@@ -47,13 +47,13 @@ void cRobot::ReadJoyStick(int pJoyStickValues[]) {
 
   if     (pJoyStickValues[0] > (JoyStickCalibrationNumbers[0] + 100)) pJoyStickValues[0] = 1;
   else if(pJoyStickValues[0] < (JoyStickCalibrationNumbers[0] - 100)) pJoyStickValues[0] = -1;
-  else                                                               pJoyStickValues[0] = 0;
+  else                                                                pJoyStickValues[0] = 0;
 
   if     (pJoyStickValues[1] > (JoyStickCalibrationNumbers[1] + 100)) pJoyStickValues[1] = 1;
   else if(pJoyStickValues[1] < (JoyStickCalibrationNumbers[1] - 100)) pJoyStickValues[1] = -1;
-  else                                                               pJoyStickValues[1] = 0;
+  else                                                                pJoyStickValues[1] = 0;
 
-  sprintf(Buffer, "%d %d", pJoyStickValues[0], pJoyStickValues[1]);
+  sprintf(Buffer, "%d %d    ", pJoyStickValues[0], pJoyStickValues[1]);
   Serial.print(Buffer);
 }
 
@@ -83,6 +83,8 @@ int cRobot::Calibrate() {
     ColourSensorValuesExtremites[i][1] = 512;
   }
 
+  Serial.print("Calibrating    |    ");
+
   int Bytes3D[6][2][2];
   int Bytes1D[24];
   int CalibrationMode = 1;
@@ -100,7 +102,7 @@ int cRobot::Calibrate() {
     }
 
     if(CalibrationMode == 1) {
-      Serial.print("    Calibrating    |    ");
+      Serial.print("Reading    |    ");
 
       for(int i=0; i<6; i++) {
         ColourSensorValues[i] = analogRead(ColourSensorPins[i]);
@@ -114,6 +116,8 @@ int cRobot::Calibrate() {
     }
 
     if(CalibrationMode == 2) {
+      Serial.print("Writing\t|\t");
+
       for(int i=0; i<6; i++) {
         for(int j=0; j<2; j++) {
           int Value = ColourSensorValuesExtremites[i][j];
@@ -159,10 +163,10 @@ void Run(int v1, int v2, int d=2) {
   v1 = map(constrain(v1, -100, 100), -100, 100, -60, 60);
   v2 = map(constrain(v2, -100, 100), -100, 100, -60, 60);
 
-  TopLeft.write(90+v1);
-  BottomLeft.write(90+v1);
-  TopRight.write(90-v2);
-  BottomRight.write(90-v2);
+  TopLeft.write     (90+v1);
+  BottomLeft.write  (90+v1);
+  TopRight.write    (90-v2);
+  BottomRight.write (90-v2);
 
   delay(d);
 }
