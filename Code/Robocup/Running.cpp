@@ -3,7 +3,7 @@
 #include "ModeSelector.h"
 
 extern cRobot Robot;
-extern int ProgramTick;
+extern uint32_t ProgramTick;
 
 const float Kp = 1.5;
 const float Ki = 0;
@@ -20,11 +20,14 @@ void Running() {
   Serial.print("Running    |    ");
 
   int ColourSensorValues[6];
+  int JoyStickValues[2];
+  Robot.ReadJoyStick(JoyStickValues);
   Robot.ReadColourSensors(ColourSensorValues, 1);
 
   if(ColourSensorValues[0] < 18 && ColourSensorValues[3] < 18 && ProgramTick > 150 && Errors[49] < 100)                         Intersection(0);
   else if(ColourSensorValues[0] < 10 && ColourSensorValues[3] < 40 && ColourSensorValues[4] < 50 && ProgramTick > 150)          Intersection(1);
   else if(ColourSensorValues[0] < 40 && ColourSensorValues[1] < 50 && ColourSensorValues[3] < 10 && ProgramTick > 150)          Intersection(2);
+  else if(JoyStickValues[0] != 0 || JoyStickValues[1] != 0)                                                                     AvoidObstacle();
   else                                                                                                                          PID(ColourSensorValues, v, Kp, Ki, Kd);
 }
 
@@ -92,4 +95,22 @@ void IntersectionTurn(int Turn) {
   }
   
   Run(0, 0, 100);
+}
+
+void AvoidObstacle() {
+  Run(-30, -30, 500);
+  Run(-30, 30, 1200);
+
+  int Offset = 10;
+  int JoyStickValues[2];
+  Robot.ReadJoyStick(JoyStickValues);
+
+  while(JoyStickValues[0] == 0 && JoyStickValues[1] == 0) {
+    Robot.ReadJoyStick(JoyStickValues);
+    Run(30, 30 - Offset);
+    delay(200);
+
+    Offset += 2;
+    if(Offset > 40) Offset = 40;
+  }
 }

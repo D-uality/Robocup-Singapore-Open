@@ -6,6 +6,7 @@ void Running();
   void PID(int ColourSensorValues[], int v, float Kp, float Ki, float Kd);
   void Intersection(int Type);
   void IntersectionTurn(int Turn);
+  void AvoidObstacle();
 void Testing();
 
 void Reading();

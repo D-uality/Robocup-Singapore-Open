@@ -13,7 +13,7 @@ Servo TopRight;
 Servo BottomRight;
 
 int Mode = 0;
-int ProgramTick = 0;
+uint32_t ProgramTick = 0;
 
 void setup() {
   Serial.begin(115200);
