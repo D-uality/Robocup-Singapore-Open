@@ -92,6 +92,5 @@ void loop() {
     if(Mode == 1) {
         Run(ServoControls[0], ServoControls[1], ServoControls[2]);
 		Mech(ServoControls[3]);
-		delay(3);
     }
 }
